@@ -236,6 +236,7 @@
     report.status("Downloading...");
     return µ.loadJson(resource).then(function (topo) {
       if (cancel.requested) return null;
+
       log.time("building meshes");
       var o = topo.objects;
       console.log(topo);
@@ -1313,8 +1314,12 @@
       param: "wind",
       overlayType: "default",
     });
+
+    bindButtonToConfiguration("#overlay-currents", {
+      param: "ocean",
+      overlayType: "default",
+    });
     bindButtonToConfiguration("#overlay-ocean-off", { overlayType: "off" });
-    bindButtonToConfiguration("#overlay-currents", { overlayType: "default" });
 
     // Add handlers for all projection buttons.
     globes.keys().forEach(function (p) {
