@@ -58,6 +58,17 @@ var products = (function () {
     return [WEATHER_PATH, dir, file].join("/");
   }
 
+  //new path for  fesom clinmate data
+  function fesomPath(attr, type, surface, level) {
+    var dir = attr.date,
+      stamp = dir === "current" ? "current" : attr.hour;
+    var file =
+      [stamp, type, surface, level, "fesom", "0.33"]
+        .filter(µ.isValue)
+        .join("-") + ".json";
+    return [WEATHER_PATH, dir, file].join("/");
+  }
+
   function gfsDate(attr) {
     if (attr.date === "current") {
       // Construct the date from the current time, rounding down to the nearest three-hour block.
@@ -620,13 +631,15 @@ var products = (function () {
     currents: {
       matches: _.matches({
         param: "ocean",
-        surface: "surface",
-        level: "currents",
+
+        // overlayType: "default",
+        // // surface: "surface",
+        // // level: "currents",
       }),
       create: function (attr) {
+        console.log("attribute:", attr);
         return when(catalogs.oscar).then(function (catalog) {
           console.log("calling ocean current");
-          console.log("attribute new", attr);
           return buildProduct({
             field: "vector",
             type: "currents",
@@ -634,10 +647,12 @@ var products = (function () {
               name: { en: "Ocean Currents", ja: "海流" },
               qualifier: { en: " @ Surface", ja: " @ 地上" },
             }),
-            paths: [oscar0p33Path(catalog, attr)],
+            // paths: [oscar0p33Path(catalog, attr)],
+            paths: [fesomPath(attr, "ocean", attr.surface, attr.level)],
 
             date: oscarDate(catalog, attr),
             navigate: function (step) {
+              console.log(`catalog: ${catalog}`, attr);
               return oscarStep(catalog, this.date, step);
             },
             builder: function (file) {
@@ -712,9 +727,72 @@ var products = (function () {
         param: "ocean",
         overlayType: "ocean_salinity",
       }),
-      create: function () {
-        console.log("salinity");
-        return null;
+      create: function (attr) {
+        return buildProduct({
+          field: "scalar",
+          type: "salinity",
+          description: localize({
+            name: { en: "Salinity", ja: "気温" },
+            qualifier: {
+              en: " @ " + describeSurface(attr),
+              ja: " @ " + describeSurfaceJa(attr),
+            },
+          }),
+          paths: [fesomPath(attr, "salinity", attr.surface, attr.level)],
+          builder: function (file) {
+            console.log("salinity");
+            var record = file,
+              data = record.data;
+            return {
+              header: record.header,
+              interpolate: bilinearInterpolateScalar,
+              data: function (i) {
+                return data[i];
+              },
+            };
+          },
+          units: [
+            {
+              label: "ppt",
+              conversion: function (x) {
+                console.log("salinity value", x);
+                return x;
+              },
+              precision: 1,
+            },
+            {
+              label: "°F",
+              conversion: function (x) {
+                return (x * 9) / 5 - 459.67;
+              },
+              precision: 1,
+            },
+            {
+              label: "K",
+              conversion: function (x) {
+                return x;
+              },
+              precision: 1,
+            },
+          ],
+          scale: {
+            bounds: [10, 39],
+            gradient: µ.segmentedColorScale([
+              // [9, [100, 179, 244]],
+              // [15, [41, 10, 130]],
+              // [20, [81, 40, 40]],
+              [20, [52, 68, 155]], // -40 C/F
+
+              [32, [52, 68, 156]], // 0 F
+              [33, [99, 153, 199]], // 0 C
+              [34, [190, 226, 236]],
+              [35, [253, 239, 167]],
+              [36, [252, 171, 97]],
+              [37, [227, 73, 50]],
+              [38, [174, 7, 36]],
+            ]),
+          },
+        });
       },
     },
 
@@ -734,7 +812,7 @@ var products = (function () {
               ja: " @ " + describeSurfaceJa(attr),
             },
           }),
-          paths: [gfs1p0degPath(attr, "temp", attr.surface, attr.level)],
+          paths: [fesomPath(attr, "temp", attr.surface, attr.level)],
           builder: function (file) {
             console.log("temperature");
             var record = file,
@@ -775,6 +853,100 @@ var products = (function () {
             bounds: [-5, 30],
             gradient: µ.segmentedColorScale([
               [-5, [37, 4, 42]],
+              [0, [41, 10, 130]],
+              [3, [81, 40, 40]],
+              [8, [192, 37, 149]], // -40 C/F
+              [10, [70, 215, 215]], // 0 F
+              [13, [21, 84, 187]], // 0 C
+              [17, [24, 132, 14]], // just above 0 C
+              [20, [247, 251, 59]],
+              [23, [235, 167, 21]],
+              [27, [230, 71, 39]],
+              [30, [88, 27, 67]],
+            ]),
+          },
+        });
+      },
+    },
+
+    ice: {
+      matches: _.matches({
+        param: "ice",
+        overlayType: "default",
+        surface: "surface",
+        // level: "currents",
+      }),
+      create: function (attr) {
+        return buildProduct({
+          field: "vector",
+          type: "ice",
+          description: localize({
+            name: { en: "ice", ja: "風速" },
+            qualifier: {
+              en: " @ " + describeSurface(attr),
+              ja: " @ " + describeSurfaceJa(attr),
+            },
+          }),
+          paths: [
+            gfs1p0degPath(attr, "icethickness", attr.surface, attr.level),
+          ],
+          date: gfsDate(attr),
+          builder: function (file) {
+            console.log("file", file);
+            var uData = file.data,
+              vData = file.data;
+            return {
+              header: file.header,
+              interpolate: bilinearInterpolateVector,
+              data: function (i) {
+                return [uData[i], vData[i]];
+              },
+            };
+          },
+          units: [
+            {
+              label: "km/h",
+              conversion: function (x) {
+                console.log("x", x);
+                return x;
+                // * 3.6;
+              },
+              precision: 0,
+            },
+            {
+              label: "m/s",
+              conversion: function (x) {
+                return x;
+              },
+              precision: 1,
+            },
+            {
+              label: "kn",
+              conversion: function (x) {
+                return x * 1.943844;
+              },
+              precision: 0,
+            },
+            {
+              label: "mph",
+              conversion: function (x) {
+                return x * 2.236936;
+              },
+              precision: 0,
+            },
+          ],
+          // scale: {
+          //   bounds: [0, 100],
+          //   gradient: function (v, a) {
+          //     return µ.extendedSinebowColor(Math.min(v, 100) / 100, a);
+          //   },
+          // },
+          particles: { maxIntensity: 17 },
+          scale: {
+            bounds: [-5, 10],
+            gradient: µ.segmentedColorScale([
+              [0, [255, 0, 0]],
+              [-5, [255, 255, 255]],
               [0, [41, 10, 130]],
               [3, [81, 40, 40]],
               [8, [192, 37, 149]], // -40 C/F

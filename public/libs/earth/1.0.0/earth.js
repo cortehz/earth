@@ -519,8 +519,11 @@
     if (!globe || !grids) return null;
 
     var mask = createMask(globe);
+    console.log("grids", grids);
     var primaryGrid = grids.primaryGrid;
     var overlayGrid = grids.overlayGrid;
+
+    console.log("primary grid:", primaryGrid);
 
     log.time("interpolating field");
     var d = when.defer(),
@@ -1210,6 +1213,23 @@
     configuration.on("change:param", function (x, param) {
       d3.select("#wind-mode-enable").classed("highlighted", param === "wind");
     });
+
+    // ice mode
+    d3.select("#ice-mode-enable").on("click", function () {
+      if (configuration.get("param") !== "ice") {
+        configuration.save({
+          param: "ice",
+          surface: "surface",
+          level: "level",
+          overlayType: "default",
+        });
+      }
+    });
+    configuration.on("change:param", function (x, param) {
+      d3.select("#ice-mode-enable").classed("highlighted", param === "ice");
+    });
+
+    // ocean mode
     d3.select("#ocean-mode-enable").on("click", function () {
       if (configuration.get("param") !== "ocean") {
         // When switching between modes, there may be no associated data for the current date. So we need
@@ -1291,7 +1311,7 @@
     d3.selectAll(".ocean-depth").each(function () {
       var id = this.id,
         parts = id.split("-");
-      console.log(parts);
+      console.log("button binder", parts);
       bindButtonToConfiguration("#" + id, {
         param: "ocean",
         surface: parts[0],
