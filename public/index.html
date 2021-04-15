@@ -125,7 +125,7 @@
           Mode | <span class="text-button" id="wind-mode-enable">Air</span> –
           <span class="text-button" id="ocean-mode-enable">Ocean</span>
           –
-          <span class="text-button" id="ice-mode-enable">Ice</span>
+          <span class="text-button" id="ice-mode-enable">Ice Area</span>
         </p>
         <p class="wind-mode">
           Height |
@@ -145,7 +145,10 @@
         <!-- ocean Depth field -->
         <p class="ocean-mode">
           Depth |
-          <span class="ocean-depth text-button" id="depth-surface" title="Surface"
+          <span
+            class="ocean-depth text-button"
+            id="depth-surface"
+            title="Ocean Surface"
             >Surface</span
           >
           – <span class="ocean-depth text-button" id="depth-100m">100</span> –
@@ -226,9 +229,23 @@
             >Salinity</span
           >
         </p>
-        <p class="ocean-mode invisible">
+        <!-- <p class="ocean-mode invisible">
           <span style="visibility: hidden">Overlay</span> |
+        </p> -->
+
+        <!-- Ice mode -->
+        <p class="ice-mode invisible">
+          Overlay |
+          <span class="text-button" id="overlay-ice-off">None</span> –
+
+          <span
+            class="text-button"
+            id="overlay-ice_thickness"
+            title="Ice Thickness"
+            >Ice Thickness</span
+          >
         </p>
+
         <p>
           Projection |
           <span class="proj text-button" id="atlantis" title="Atlantis">A</span>

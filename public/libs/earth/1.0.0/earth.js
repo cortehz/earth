@@ -1183,6 +1183,7 @@
     configuration.on("change:param", function (context, mode) {
       d3.selectAll(".ocean-mode").classed("invisible", mode !== "ocean");
       d3.selectAll(".wind-mode").classed("invisible", mode !== "wind");
+      d3.selectAll(".ice-mode").classed("invisible", mode !== "ice");
       switch (mode) {
         case "wind":
           d3.select("#nav-backward-more").attr("title", "-1 Day");
@@ -1228,6 +1229,8 @@
     configuration.on("change:param", function (x, param) {
       d3.select("#ice-mode-enable").classed("highlighted", param === "ice");
     });
+
+    bindButtonToConfiguration("#overlay-ice-off", { overlayType: "off" });
 
     // ocean mode
     d3.select("#ocean-mode-enable").on("click", function () {
@@ -1340,6 +1343,7 @@
       overlayType: "default",
     });
     bindButtonToConfiguration("#overlay-ocean-off", { overlayType: "off" });
+    bindButtonToConfiguration("#overlay-ice-off", { overlayType: "default" });
 
     // Add handlers for all projection buttons.
     globes.keys().forEach(function (p) {
