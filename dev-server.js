@@ -45,7 +45,9 @@ function appLogger() {
   );
 }
 
-var port = process.argv[2];
+// var port = process.argv[2];
+
+const PORT = process.env.PORT || 3000;
 var express = require("express");
 var compression = require("compression");
 var app = express();
@@ -56,5 +58,5 @@ app.use(compression({ filter: compressionFilter }));
 app.use(appLogger());
 app.use(express.static("public"));
 
-app.listen(port);
-console.log("Listening on port " + port + "...");
+app.listen(PORT);
+console.log(`Listening on port ${PORT} ...`);
