@@ -5,3 +5,8 @@ target
 scratch
 private
 *.iml
+build/*.js
+
+npm-debug.log
+.DS_Store
+/*.env
