@@ -6,6 +6,95 @@
  *
  * https://github.com/cambecc/earth
  */
+
+const temperatureColorGradient = [
+  [37, 4, 42],
+  [41, 10, 130],
+  [81, 40, 40],
+  [192, 37, 149], // -40 C/F
+  [70, 215, 215], // 0 F
+  [21, 84, 187], // 0 C
+  [24, 132, 14], // just above 0 C
+  [247, 251, 59],
+  [235, 167, 21],
+  [230, 71, 39],
+  [88, 27, 67],
+];
+
+const salintyColorGradient = [
+  [52, 68, 155],
+  [55, 72, 159],
+  [56, 75, 162],
+  [57, 78, 165],
+  [60, 81, 169],
+  [99, 153, 199],
+  [190, 226, 236],
+  [253, 239, 167],
+  [252, 171, 97],
+  [227, 73, 50],
+  [174, 7, 36],
+];
+
+const oceanCurrentColorGradient = [
+  [10, 25, 68],
+  [10, 25, 250],
+  [24, 255, 93],
+  [255, 233, 102],
+  [255, 233, 15],
+  [255, 15, 15],
+];
+
+const iceColorGradient = [
+  [7, 50, 112],
+  [9, 62, 136],
+  [13, 74, 160],
+  [16, 87, 185],
+  [23, 111, 233],
+  [62, 136, 240],
+  [107, 163, 241],
+  [207, 207, 207],
+  [243, 245, 247],
+  [243, 245, 247],
+  [255, 255, 255],
+];
+
+function interpolationOfTwoArrays(arr1, arr2) {
+  var arr = [];
+  for (var i = 0; i < arr1.length; i++) {
+    arr.push([arr1[i], arr2[i]]);
+  }
+  window.localStorage.setItem("activeScale", JSON.stringify(arr));
+}
+
+function makeArr(startValue, stopValue, step) {
+  var arr = [];
+  var step = (stopValue - startValue) / (step - 1);
+  for (var i = 0; i < step; i++) {
+    arr.push(parseFloat((startValue + step * i).toFixed(2)));
+  }
+  return arr;
+}
+
+// console.log(makeArr(2, 10, 10));
+
+// let startScale = document.getElementById("startScale");
+// let endScale = document.getElementById("endScale");
+let log = document.getElementById("log");
+let form = document.getElementById("scale-submit");
+
+// startScale.oninput = handleInput;
+
+//pass value of startScale to handleSubmit
+
+function handleInput(e) {
+  log.innerHTML = `Value: 
+      <strong>${e.target.value}</strong>`;
+
+  //set color scale on local storage
+  window.localStorage.setItem("tempStart", e.target.value);
+  window.localStorage.setItem("tempEnd");
+}
+
 var products = (function () {
   "use strict";
 
@@ -19,6 +108,107 @@ var products = (function () {
     //   .loadJson([OSCAR_PATH], "20160215-surface-otemperature-oscar-0.33.json")
     //   .join("/"),
   };
+
+  let arrayMain;
+
+  //function to get color interpolation for colormap
+  function handleSubmit(e) {
+    // e.preventDefault();
+
+    let arr = [];
+    let startValue = document.getElementById("startScale").value;
+    let endValue = document.getElementById("endScale").value;
+
+    let { colorScale, step } = JSON.parse(window.localStorage.getItem("scale"));
+
+    scale = {
+      colorScale,
+      startScale: startValue,
+      stopScale: endValue,
+      steps: 11,
+    };
+
+    window.localStorage.setItem("scale", JSON.stringify(scale));
+    let scales = JSON.parse(window.localStorage.getItem("scale"));
+
+    var stepping =
+      (Number(scales.stopScale) - Number(scales.startScale)) /
+      (Number(scales.steps) - 1);
+    for (var i = 0; i < Number(scales.steps); i++) {
+      arr.push(
+        parseFloat((Number(scales.startScale) + stepping * i).toFixed(2))
+      );
+    }
+
+    interpolationOfTwoArrays(arr, scales.colorScale);
+  }
+
+  //setting scale to an empty object
+  let scale = {};
+
+  //get overlay buttons from dom
+  let tempOverlayButton = document.getElementById("overlay-otemperature");
+  let salinityOverlayButton = document.getElementById("overlay-ocean_salinity");
+  let oceanMode = document.getElementById("ocean-mode-enable");
+  let overlayCurrents = document.getElementById("overlay-currents");
+  let iceArea = document.getElementById("ice-mode-enable");
+
+  let form = document.getElementById("scale-submit");
+  let formReset = document.getElementById("form-reset");
+
+  //set scale for temperature overlay
+  tempOverlayButton?.addEventListener("click", function () {
+    scale = {
+      startScale: -5,
+      stopScale: 30,
+      step: 11,
+      colorScale: temperatureColorGradient,
+    };
+    window.localStorage.setItem("scale", JSON.stringify(scale));
+  });
+
+  //set scale for salinity overlay
+  salinityOverlayButton?.addEventListener("click", function () {
+    scale = {
+      startScale: 30,
+      stopScale: 38,
+      step: 11,
+      colorScale: salintyColorGradient,
+    };
+    window.localStorage.setItem("scale", JSON.stringify(scale));
+  });
+
+  //set scale for current overlay
+  function setCurrentOceanScale() {
+    scale = {
+      startScale: 0,
+      stopScale: 1.5,
+      step: 6,
+      colorScale: oceanCurrentColorGradient,
+    };
+    window.localStorage.setItem("scale", JSON.stringify(scale));
+  }
+  oceanMode?.addEventListener("click", setCurrentOceanScale);
+  overlayCurrents?.addEventListener("click", setCurrentOceanScale);
+
+  //set scale for ice overlay
+  iceArea?.addEventListener("click", function () {
+    scale = {
+      startScale: 0,
+      stopScale: 1,
+      step: 11,
+      colorScale: iceColorGradient,
+    };
+    window.localStorage.setItem("scale", JSON.stringify(scale));
+  });
+
+  let scales = JSON.parse(window.localStorage.getItem("scale"));
+  let activeGradient = JSON.parse(window.localStorage.getItem("activeScale"));
+
+  form.addEventListener("submit", handleSubmit);
+  formReset.addEventListener("submit", () => {
+    window.localStorage.removeItem("activeScale");
+  });
 
   function buildProduct(overrides) {
     return _.extend(
@@ -651,7 +841,6 @@ var products = (function () {
             // date: oscarDate(catalog, attr),
             date: Date.now(),
             navigate: function (step) {
-              console.log(`catalog: ${catalog}`, attr);
               return oscarStep(catalog, this.date, step);
             },
             builder: function (file) {
@@ -714,6 +903,13 @@ var products = (function () {
       },
     },
 
+    color_gradient: {
+      matches: _.matches({ overlayType: "off" }),
+      create: function () {
+        return null;
+      },
+    },
+
     off: {
       matches: _.matches({ overlayType: "off" }),
       create: function () {
@@ -739,7 +935,6 @@ var products = (function () {
           }),
           paths: [fesomPath(attr, "salinity", attr.surface, attr.level)],
           builder: function (file) {
-            console.log("salinity");
             var record = file,
               data = record.data;
             return {
@@ -754,24 +949,33 @@ var products = (function () {
             {
               label: "ppt",
               conversion: function (x) {
-                console.log("salinity value", x);
                 return x;
               },
               precision: 1,
             },
           ],
           scale: {
-            bounds: [33, 37],
-            gradient: µ.segmentedColorScale([
-              [20, [52, 68, 155]],
-              [32, [52, 68, 156]],
-              [33, [99, 153, 199]],
-              [34, [190, 226, 236]],
-              [35, [253, 239, 167]],
-              [36, [252, 171, 97]],
-              [37, [227, 73, 50]],
-              [38, [174, 7, 36]],
-            ]),
+            bounds: [
+              scales?.startScale === null ? 30 : Number(scales?.startScale),
+              scales?.stopScale === null ? 38 : Number(scales?.stopScale),
+            ],
+            gradient: µ.segmentedColorScale(
+              activeGradient !== null
+                ? activeGradient
+                : [
+                    [30, [52, 68, 155]],
+                    [30.5, [55, 72, 159]],
+                    [31, [56, 75, 162]],
+                    [31.5, [57, 78, 165]],
+                    [32, [60, 81, 169]],
+                    [33, [99, 153, 199]],
+                    [34, [190, 226, 236]],
+                    [35, [253, 239, 167]],
+                    [36, [252, 171, 97]],
+                    [37, [227, 73, 50]],
+                    [38, [174, 7, 36]],
+                  ]
+            ),
           },
         });
       },
@@ -795,7 +999,6 @@ var products = (function () {
           }),
           paths: [fesomPath(attr, "temp", attr.surface, attr.level)],
           builder: function (file) {
-            console.log("temperature");
             var record = file,
               data = record.data;
             return {
@@ -830,20 +1033,27 @@ var products = (function () {
             },
           ],
           scale: {
-            bounds: [-5, 30],
-            gradient: µ.segmentedColorScale([
-              [-5, [37, 4, 42]],
-              [0, [41, 10, 130]],
-              [3, [81, 40, 40]],
-              [8, [192, 37, 149]], // -40 C/F
-              [10, [70, 215, 215]], // 0 F
-              [13, [21, 84, 187]], // 0 C
-              [17, [24, 132, 14]], // just above 0 C
-              [20, [247, 251, 59]],
-              [23, [235, 167, 21]],
-              [27, [230, 71, 39]],
-              [30, [88, 27, 67]],
-            ]),
+            bounds: [
+              scales?.startScale === null ? -5 : Number(scales?.startScale),
+              scales?.stopScale === null ? 30 : Number(scales?.stopScale),
+            ],
+            gradient: µ.segmentedColorScale(
+              activeGradient !== null
+                ? activeGradient
+                : [
+                    [-5, [37, 4, 42]],
+                    [0, [41, 10, 130]],
+                    [3, [81, 40, 40]],
+                    [8, [192, 37, 149]], // -40 C/F
+                    [10, [70, 215, 215]], // 0 F
+                    [13, [21, 84, 187]], // 0 C
+                    [17, [24, 132, 14]], // just above 0 C
+                    [20, [247, 251, 59]],
+                    [23, [235, 167, 21]],
+                    [27, [230, 71, 39]],
+                    [30, [88, 27, 67]],
+                  ]
+            ),
           },
         });
       },
@@ -889,20 +1099,23 @@ var products = (function () {
           particles: { maxIntensity: 200 },
           scale: {
             bounds: [0, 1],
-            gradient: µ.segmentedColorScale([
-              // [null, [150, 150, 150]],
-              [0, [7, 50, 112]],
-              [0.1, [9, 62, 136]],
-              [0.2, [13, 74, 160]],
-              [0.3, [16, 87, 185]],
-              [0.4, [23, 111, 233]],
-              [0.5, [62, 136, 240]],
-              [0.6, [107, 163, 241]],
-              [0.7, [207, 207, 207]],
-              [0.8, [243, 245, 247]],
-              [0.9, [243, 245, 247]],
-              [1.0, [255, 255, 255]],
-            ]),
+            gradient: µ.segmentedColorScale(
+              activeGradient !== null
+                ? activeGradient
+                : [
+                    [0, [7, 50, 112]],
+                    [0.1, [9, 62, 136]],
+                    [0.2, [13, 74, 160]],
+                    [0.3, [16, 87, 185]],
+                    [0.4, [23, 111, 233]],
+                    [0.5, [62, 136, 240]],
+                    [0.6, [107, 163, 241]],
+                    [0.7, [207, 207, 207]],
+                    [0.8, [243, 245, 247]],
+                    [0.9, [243, 245, 247]],
+                    [1.0, [255, 255, 255]],
+                  ]
+            ),
           },
         });
       },
@@ -939,7 +1152,6 @@ var products = (function () {
             {
               label: "",
               conversion: function (x) {
-                console.log("ice_thickness value", x);
                 return x;
               },
               precision: 1,
@@ -949,9 +1161,15 @@ var products = (function () {
             bounds: [1, 4],
             gradient: µ.segmentedColorScale([
               [0, [23, 111, 233]],
-              [1, [62, 136, 240]],
-              [2, [107, 163, 241]],
-              [3, [255, 255, 255]],
+              [0.5, [46, 125, 235]],
+              [1, [69, 140, 237]],
+              [1.5, [93, 154, 240]],
+              [2, [116, 169, 242]],
+              [2.5, [139, 183, 244]],
+              [3.2, [162, 197, 246]],
+              [3.4, [185, 212, 248]],
+              [3.5, [209, 226, 251]],
+              [3.8, [232, 241, 253]],
               [4, [255, 255, 255]],
             ]),
           },
@@ -1153,6 +1371,8 @@ var products = (function () {
       },
     };
   }
+
+  //for every array return a unique value
 
   function productsFor(attributes) {
     var attr = _.clone(attributes),

@@ -354,3 +354,93 @@ body {
 #closing {
   padding-bottom: 2.5rem;
 }
+
+/* set scale styling */
+.flex {
+  display: flex;
+}
+.relative {
+  position: relative;
+}
+
+.scale_main {
+  align-items: center;
+}
+
+.adjust_scale {
+  background-color: darkslateblue;
+  color: #eeeeee;
+  border-radius: 10px;
+  border: none;
+  padding: 10px 15px;
+  font-size: 1rem;
+  margin: 10px;
+  cursor: pointer;
+}
+
+.scale_container {
+  display: none;
+}
+
+.scale_container_open {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 3.5rem;
+  right: 10px;
+  width: 220px;
+  background-color: #fff;
+  border-radius: 20px;
+}
+
+.scale_container button {
+  padding: 0.8rem;
+  padding: 0.8rem;
+  cursor: pointer;
+  color: #fff;
+}
+
+.set_scale_button {
+  border: none;
+
+  background-color: rgb(88, 76, 163);
+  margin-top: 1rem;
+}
+
+.reset {
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  border: none;
+  background-color: salmon;
+  width: 100%;
+  height: 100%;
+}
+
+.scale_submit {
+  flex-direction: column;
+  color: rgba(5, 10, 30, 0.85);
+}
+
+.scale_heading {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 1rem 1.2rem;
+}
+.scale_submit span {
+  position: absolute;
+  top: -8px;
+  background: #fff;
+  padding: 0 10px;
+  left: 10px;
+}
+
+.scale_submit input {
+  padding: 0.5rem;
+  margin: auto;
+  width: 100%;
+}
+.scale_submit label {
+  position: relative;
+  font-size: 0.8rem;
+  margin: 0.5rem 1.2rem;
+}

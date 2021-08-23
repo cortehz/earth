@@ -47,7 +47,7 @@ function appLogger() {
 
 // var port = process.argv[2];
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 var express = require("express");
 var compression = require("compression");
 var app = express();

@@ -523,8 +523,6 @@
     var primaryGrid = grids.primaryGrid;
     var overlayGrid = grids.overlayGrid;
 
-    console.log("primary grid:", primaryGrid);
-
     log.time("interpolating field");
     var d = when.defer(),
       cancel = this.cancel;
@@ -1054,6 +1052,14 @@
     gridAgent.listenTo(configuration, "change", function () {
       var changed = _.keys(configuration.changedAttributes()),
         rebuildRequired = false;
+
+      // scaleSubmitButton.on("submit", function () {
+      //   window.localStorage.setItem(
+      //     "startScale",
+      //     JSON.stringify(temperatureColorGradient)
+      //   );
+      //   rebuildRequired = true;
+      // });
 
       // Build a new grid if any layer-related attributes have changed.
       if (

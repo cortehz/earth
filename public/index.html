@@ -103,9 +103,48 @@
           <span id="toggle-zone" class="text-button"></span>
         </p>
         <p>Data | <span id="data-layer"></span></p>
-        <p>
-          <span id="scale-label">Scale | </span><canvas id="scale"></canvas>
-        </p>
+        <div class="flex relative scale_main">
+          <p>
+            <span id="scale-label">Scale | </span><canvas id="scale"></canvas>
+          </p>
+          <div class="main_scale_container">
+            <button class="adjust_scale">Adjust scale</button>
+            <div class="scale_container">
+              <form id="scale-submit" class="flex scale_submit">
+                <h5 class="scale_heading">Set upper and lower limits</h5>
+                <label for="start_range" id="startScalelabel" class="flex">
+                  <span> Start </span>
+                  <input
+                    type="number"
+                    name="start_range"
+                    id="startScale"
+                    step="any"
+                    required
+                /></label>
+
+                <label for="end_range" class="flex">
+                  <span>End</span>
+                  <input
+                    required
+                    type="number"
+                    id="endScale"
+                    step="any"
+                    name="end_range"
+                  />
+                </label>
+                <button type="submit" class="set_scale_button">
+                  Set Scale
+                </button>
+              </form>
+              <form style="margin-top: -6px" id="form-reset">
+                <input style="display: none" />
+                <button type="submit" class="reset">Reset</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- </p> -->
         <p>Source | <span id="data-center"></span></p>
         <p>
           Control |
@@ -336,7 +375,7 @@
     <script src="/libs/topojson/1.1.0/topojson.js" charset="utf-8"></script>
     <script src="/libs/d3/3.3.10/d3.js" charset="utf-8"></script>
 -->
-
+    <script src="/libs/setColorScale.js"></script>
     <script
       src="/libs/d3.geo/0.0.0/d3.geo.projection.v0.min.js"
       charset="utf-8"
