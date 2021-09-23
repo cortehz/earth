@@ -141,7 +141,7 @@ var products = (function () {
   let formReset = document.getElementById("form-reset");
 
   //set scale for temperature overlay
-  tempOverlayButton?.addEventListener("click", function () {
+  tempOverlayButton.addEventListener("click", function () {
     scale = {
       startScale: -5,
       stopScale: 30,
@@ -152,7 +152,7 @@ var products = (function () {
   });
 
   //set scale for salinity overlay
-  salinityOverlayButton?.addEventListener("click", function () {
+  salinityOverlayButton.addEventListener("click", function () {
     scale = {
       startScale: 30,
       stopScale: 38,
