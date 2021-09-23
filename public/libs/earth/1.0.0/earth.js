@@ -1053,14 +1053,6 @@
       var changed = _.keys(configuration.changedAttributes()),
         rebuildRequired = false;
 
-      // scaleSubmitButton.on("submit", function () {
-      //   window.localStorage.setItem(
-      //     "startScale",
-      //     JSON.stringify(temperatureColorGradient)
-      //   );
-      //   rebuildRequired = true;
-      // });
-
       // Build a new grid if any layer-related attributes have changed.
       if (
         _.intersection(changed, ["date", "hour", "param", "surface", "level"])
@@ -1244,6 +1236,7 @@
         // When switching between modes, there may be no associated data for the current date. So we need
         // find the closest available according to the catalog. This is not necessary if date is "current".
         // UNDONE: this code is annoying. should be easier to get date for closest ocean product.
+
         var ocean = {
           param: "ocean",
           surface: "surface",

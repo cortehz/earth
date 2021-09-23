@@ -7,6 +7,7 @@
  * https://github.com/cambecc/earth
  */
 
+// default color scale for variables
 const temperatureColorGradient = [
   [37, 4, 42],
   [41, 10, 130],
@@ -58,6 +59,7 @@ const iceColorGradient = [
   [255, 255, 255],
 ];
 
+//function to set color scale on local storage
 function interpolationOfTwoArrays(arr1, arr2) {
   var arr = [];
   for (var i = 0; i < arr1.length; i++) {
@@ -75,25 +77,8 @@ function makeArr(startValue, stopValue, step) {
   return arr;
 }
 
-// console.log(makeArr(2, 10, 10));
-
-// let startScale = document.getElementById("startScale");
-// let endScale = document.getElementById("endScale");
-let log = document.getElementById("log");
+//submit button for set color scales
 let form = document.getElementById("scale-submit");
-
-// startScale.oninput = handleInput;
-
-//pass value of startScale to handleSubmit
-
-function handleInput(e) {
-  log.innerHTML = `Value: 
-      <strong>${e.target.value}</strong>`;
-
-  //set color scale on local storage
-  window.localStorage.setItem("tempStart", e.target.value);
-  window.localStorage.setItem("tempEnd");
-}
 
 var products = (function () {
   "use strict";
@@ -109,17 +94,15 @@ var products = (function () {
     //   .join("/"),
   };
 
-  let arrayMain;
-
   //function to get color interpolation for colormap
-  function handleSubmit(e) {
-    // e.preventDefault();
-
+  function handleSubmit() {
+    // create an empty array and get start and end scale for colors in inputs
     let arr = [];
     let startValue = document.getElementById("startScale").value;
     let endValue = document.getElementById("endScale").value;
 
-    let { colorScale, step } = JSON.parse(window.localStorage.getItem("scale"));
+    //get the current color scale from local storage
+    let { colorScale } = JSON.parse(window.localStorage.getItem("scale"));
 
     scale = {
       colorScale,
@@ -131,6 +114,7 @@ var products = (function () {
     window.localStorage.setItem("scale", JSON.stringify(scale));
     let scales = JSON.parse(window.localStorage.getItem("scale"));
 
+    //push to array with start and end values from inputs but always a step of 11 between them
     var stepping =
       (Number(scales.stopScale) - Number(scales.startScale)) /
       (Number(scales.steps) - 1);
@@ -178,18 +162,19 @@ var products = (function () {
     window.localStorage.setItem("scale", JSON.stringify(scale));
   });
 
-  //set scale for current overlay
-  function setCurrentOceanScale() {
-    scale = {
-      startScale: 0,
-      stopScale: 1.5,
-      step: 6,
-      colorScale: oceanCurrentColorGradient,
-    };
-    window.localStorage.setItem("scale", JSON.stringify(scale));
-  }
-  oceanMode?.addEventListener("click", setCurrentOceanScale);
-  overlayCurrents?.addEventListener("click", setCurrentOceanScale);
+  // //set scale for current overlay
+  // function setCurrentOceanScale() {
+  //   scale = {
+  //     startScale: 0,
+  //     stopScale: 1.5,
+  //     step: 6,
+  //     colorScale: oceanCurrentColorGradient,
+  //   };
+  //   window.localStorage.setItem("scale", JSON.stringify(scale));
+  //   window.localStorage.setItem("activeScale", JSON.stringify(scale));
+  // }
+  // oceanMode?.addEventListener("click", setCurrentOceanScale);
+  // overlayCurrents?.addEventListener("click", setCurrentOceanScale);
 
   //set scale for ice overlay
   iceArea?.addEventListener("click", function () {
@@ -209,6 +194,19 @@ var products = (function () {
   formReset.addEventListener("submit", () => {
     window.localStorage.removeItem("activeScale");
   });
+
+  //set current speed value multiplicator
+
+  let multiplyerForm = document.getElementById("multiplier");
+
+  const onSubmitMultiplyer = (e) => {
+    e.preventDefault();
+    window.location.reload();
+  };
+
+  multiplyerForm.addEventListener("submit", onSubmitMultiplyer);
+
+  const multiplicator = window.localStorage.getItem("multiplicator");
 
   function buildProduct(overrides) {
     return _.extend(
@@ -850,8 +848,16 @@ var products = (function () {
                 header: file[0].header,
                 interpolate: bilinearInterpolateVector,
                 data: function (i) {
-                  var u = uData[i],
-                    v = vData[i];
+                  var u = `${
+                      multiplicator
+                        ? uData[i] * Number(multiplicator)
+                        : uData[i]
+                    }`,
+                    v = `${
+                      multiplicator
+                        ? uData[i] * Number(multiplicator)
+                        : uData[i]
+                    }`;
                   return µ.isValue(u) && µ.isValue(v) ? [u, v] : null;
                 },
               };
@@ -887,12 +893,9 @@ var products = (function () {
               },
             ],
             scale: {
-              bounds: [
-                scales?.startScale === null ? 0 : Number(scales?.startScale),
-                scales?.stopScale === null ? 1.5 : Number(scales?.stopScale),
-              ],
+              bounds: [0, 1.5],
               gradient: µ.segmentedColorScale([
-                activeGradient?.length > 0 ? activeGradient : [0, [10, 25, 68]],
+                [0, [10, 25, 68]],
                 [0.15, [10, 25, 250]],
                 [0.4, [24, 255, 93]],
                 [0.65, [255, 233, 102]],

@@ -444,3 +444,19 @@ body {
   font-size: 0.8rem;
   margin: 0.5rem 1.2rem;
 }
+
+/* ocean current speed input/form */
+.ocean-mode {
+  display: flex;
+  align-items: center;
+}
+
+.ocean-mode input {
+  margin: 0px;
+  margin-left: 5px;
+  padding: 5px;
+}
+
+.ocean-mode button {
+  padding: 5px;
+}

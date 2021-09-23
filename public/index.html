@@ -247,12 +247,24 @@
             >MSLP</span
           >
         </p>
-        <p class="ocean-mode invisible">
+        <div class="ocean-mode invisible">
           Animate |
           <span class="text-button" id="animate-currents" title="Currents"
             >Currents</span
           >
-        </p>
+          <form id="multiplier">
+            <input
+              type="number"
+              id="animate-speed"
+              min="1"
+              max="100"
+              placeholder="Enter a number"
+              step="1"
+              required
+            />
+            <button type="submit" class="increase_speed"></button>
+          </form>
+        </div>
         <p class="ocean-mode invisible">
           Overlay |
           <span class="text-button" id="overlay-ocean-off">None</span> –

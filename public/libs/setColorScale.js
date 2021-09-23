@@ -27,3 +27,26 @@ document.addEventListener("click", (evt) => {
   // This is a click outside. Close the flyout.
   scale_container.classList.remove("scale_container_open");
 });
+
+//increase current speeds
+let increase = document.querySelector("#animate-speed");
+let increaseButton = document.querySelector(".increase_speed");
+
+const multiplicator = window.localStorage.getItem("multiplicator");
+increaseButton.innerHTML = `Current Speed ${
+  multiplicator !== null || undefined ? `x${multiplicator}` : ""
+}`;
+
+["change", "keyup"].forEach((evt) =>
+  increase.addEventListener(evt, updateValue, false)
+);
+
+function updateValue(e) {
+  window.localStorage.setItem("multiplicator", e.target.value);
+  let multiplicator = window.localStorage.getItem("multiplicator");
+  increaseButton.innerHTML = `Current Speed ${
+    multiplicator !== null || undefined
+      ? `x${multiplicator}`
+      : `x${e.target.value}`
+  }`;
+}
