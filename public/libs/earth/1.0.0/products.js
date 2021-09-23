@@ -962,11 +962,11 @@ var products = (function () {
           ],
           scale: {
             bounds: [
-              scales?.startScale === null ? 30 : Number(scales?.startScale),
-              scales?.stopScale === null ? 38 : Number(scales?.stopScale),
+              scales.startScale === null ? 30 : Number(scales.startScale),
+              scales.stopScale === null ? 38 : Number(scales.stopScale),
             ],
             gradient: µ.segmentedColorScale(
-              activeGradient?.length > 0
+              activeGradient.length > 0
                 ? activeGradient
                 : [
                     [30, [52, 68, 155]],
@@ -1040,11 +1040,11 @@ var products = (function () {
           ],
           scale: {
             bounds: [
-              scales?.startScale === null ? -5 : Number(scales?.startScale),
-              scales?.stopScale === null ? 30 : Number(scales?.stopScale),
+              scales.startScale === null ? -5 : Number(scales.startScale),
+              scales.stopScale === null ? 30 : Number(scales.stopScale),
             ],
             gradient: µ.segmentedColorScale(
-              activeGradient?.length > 0
+              activeGradient.length > 0
                 ? activeGradient
                 : [
                     [-5, [37, 4, 42]],
@@ -1106,7 +1106,7 @@ var products = (function () {
           scale: {
             bounds: [0, 1],
             gradient: µ.segmentedColorScale(
-              activeGradient?.length > 0
+              activeGradient.length > 0
                 ? activeGradient
                 : [
                     [0, [7, 50, 112]],
