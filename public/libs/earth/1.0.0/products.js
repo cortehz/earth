@@ -141,7 +141,7 @@ var products = (function () {
   let formReset = document.getElementById("form-reset");
 
   //set scale for temperature overlay
-  tempOverlayButton.addEventListener("click", function () {
+  tempOverlayButton?.addEventListener("click", function () {
     scale = {
       startScale: -5,
       stopScale: 30,
@@ -152,7 +152,7 @@ var products = (function () {
   });
 
   //set scale for salinity overlay
-  salinityOverlayButton.addEventListener("click", function () {
+  salinityOverlayButton?.addEventListener("click", function () {
     scale = {
       startScale: 30,
       stopScale: 38,
@@ -177,7 +177,7 @@ var products = (function () {
   // overlayCurrents?.addEventListener("click", setCurrentOceanScale);
 
   //set scale for ice overlay
-  iceArea.addEventListener("click", function () {
+  iceArea?.addEventListener("click", function () {
     scale = {
       startScale: 0,
       stopScale: 1,
@@ -962,11 +962,11 @@ var products = (function () {
           ],
           scale: {
             bounds: [
-              scales.startScale === null ? 30 : Number(scales.startScale),
-              scales.stopScale === null ? 38 : Number(scales.stopScale),
+              scales?.startScale === null ? 30 : Number(scales?.startScale),
+              scales?.stopScale === null ? 38 : Number(scales?.stopScale),
             ],
             gradient: µ.segmentedColorScale(
-              activeGradient.length > 0
+              activeGradient?.length > 0
                 ? activeGradient
                 : [
                     [30, [52, 68, 155]],
@@ -1040,11 +1040,11 @@ var products = (function () {
           ],
           scale: {
             bounds: [
-              scales.startScale === null ? -5 : Number(scales.startScale),
-              scales.stopScale === null ? 30 : Number(scales.stopScale),
+              scales?.startScale === null ? -5 : Number(scales?.startScale),
+              scales?.stopScale === null ? 30 : Number(scales?.stopScale),
             ],
             gradient: µ.segmentedColorScale(
-              activeGradient.length > 0
+              activeGradient?.length > 0
                 ? activeGradient
                 : [
                     [-5, [37, 4, 42]],
@@ -1106,7 +1106,7 @@ var products = (function () {
           scale: {
             bounds: [0, 1],
             gradient: µ.segmentedColorScale(
-              activeGradient.length > 0
+              activeGradient?.length > 0
                 ? activeGradient
                 : [
                     [0, [7, 50, 112]],
