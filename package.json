@@ -16,7 +16,9 @@
     "type": "git",
     "url": "https://github.com/FESOM/earth"
   },
-  "engine": "node >= 0.10.21",
+  "engines": {
+    "node": "14.x"
+  },
   "dependencies": {
     "compression": "^1.7.4",
     "express": "4.17.1",
