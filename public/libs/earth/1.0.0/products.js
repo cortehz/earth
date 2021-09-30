@@ -855,8 +855,8 @@ var products = (function () {
                     }`,
                     v = `${
                       multiplicator
-                        ? uData[i] * Number(multiplicator)
-                        : uData[i]
+                        ? vData[i] * Number(multiplicator)
+                        : vData[i]
                     }`;
                   return µ.isValue(u) && µ.isValue(v) ? [u, v] : null;
                 },
