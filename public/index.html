@@ -98,10 +98,25 @@
       </p>
 
       <div id="menu" class="invisible">
-        <p>
+        <p class="data-date">
           Date | <span id="data-date" class="local"></span>
           <span id="toggle-zone" class="text-button"></span>
         </p>
+        <div class="date-time-flex">
+          <time class="new_date"></time>
+          <div class="date-container">
+            <label for="date-select">Change year:</label>
+            <select name="dates" id="date-select" class="year-select">
+              <option selected id="selected_year"></option>
+              <option value="1948">1948</option>
+              <option value="1949">1949</option>
+              <option value="1950">1950</option>
+              <option value="1951">1951</option>
+              <option value="1952">1952</option>
+            </select>
+          </div>
+        </div>
+
         <p>Data | <span id="data-layer"></span></p>
         <div class="flex relative scale_main">
           <p>
@@ -160,6 +175,7 @@
             >Grid</span
           >
         </p>
+
         <p>
           Mode | <span class="text-button" id="wind-mode-enable">Air</span> –
           <span class="text-button" id="ocean-mode-enable">Ocean</span>
@@ -248,22 +264,28 @@
           >
         </p>
         <div class="ocean-mode invisible">
-          Animate |
-          <span class="text-button" id="animate-currents" title="Currents"
-            >Currents</span
-          >
-          <form id="multiplier">
-            <input
-              type="number"
-              id="animate-speed"
-              min="1"
-              max="100"
-              placeholder="Enter a number"
-              step="1"
-              required
-            />
-            <button type="submit" class="increase_speed"></button>
-          </form>
+          <!-- <span class="animate-header"></span> -->
+          <span class="currents-speed">
+            Animate |
+            <span class="text-button" id="animate-currents" title="Currents"
+              >Currents</span
+            >
+            <form id="multiplier">
+              <label for="multiplier-input"
+                >Current speeds <span class="speed-value"></span>:</label
+              >
+              <input
+                type="number"
+                id="animate-speed"
+                min="1"
+                max="100"
+                placeholder="Enter a number"
+                step="1"
+                required
+              />
+              <button type="submit" class="increase_speed"></button>
+            </form>
+          </span>
         </div>
         <p class="ocean-mode invisible">
           Overlay |

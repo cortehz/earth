@@ -208,6 +208,8 @@ var products = (function () {
 
   const multiplicator = window.localStorage.getItem("multiplicator");
 
+  // const refTimeNew = document.getElementById("#date-date-new")
+
   function buildProduct(overrides) {
     return _.extend(
       {
@@ -246,15 +248,38 @@ var products = (function () {
     return [WEATHER_PATH, dir, file].join("/");
   }
 
-  //new path for  fesom clinmate data
+  const defaultYear = "1950";
+  const yearValue = window.localStorage.getItem("currentYear");
+  const currentFileDate = document.querySelector(".new_date");
+  //new path for  fesom climate data
   function fesomPath(attr, type, surface, level) {
+    let loading;
     var dir = attr.date,
       stamp = dir === "current" ? "19500100" : attr.hour;
     var file =
-      [stamp, type, surface, level, "fesom", "0.33"]
-        .filter(µ.isValue)
-        .join("-") + ".json";
-    return [WEATHER_PATH, dir, file].join("/");
+      [type, surface, level, "fesom", "0.33"].filter(µ.isValue).join("-") +
+      ".json";
+    const selectedYear = yearValue ? yearValue : defaultYear;
+
+    const filePath = [WEATHER_PATH, dir, selectedYear, file].join("/");
+
+    //fetch request from filePath
+    fetch(filePath)
+      .then((response) => response.json())
+      .then((data) => {
+        //set current date to the date of the climate data
+        currentFileDate.innerHTML = `<span style="font-size: 1.5rem">Data Date</span>: ${new Date(
+          data[0].header.refTime
+        ).toDateString()}`;
+      })
+      .catch(
+        () =>
+          (currentFileDate.innerHTML = `<span>Date</span>: Couldn't load date`)
+      );
+
+    return filePath;
+
+    // currentFileDate.innerHTML =
   }
 
   function gfsDate(attr) {
@@ -939,7 +964,7 @@ var products = (function () {
               ja: " @ " + describeSurfaceJa(attr),
             },
           }),
-          paths: [fesomPath(attr, "salinity", attr.surface, attr.level)],
+          paths: [fesomPath(attr, "salt", attr.surface, attr.level)],
           builder: function (file) {
             var record = file,
               data = record.data;

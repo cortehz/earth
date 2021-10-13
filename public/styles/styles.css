@@ -56,6 +56,80 @@ canvas {
   }
 }
 
+/* hide old date */
+.data-date {
+  display: none;
+}
+.date-time-flex {
+  display: flex;
+  justify-content: space-between;
+}
+
+.date-container {
+  display: flex;
+  align-items: center;
+}
+
+.year-select {
+  appearance: none;
+  background: rgba(72, 61, 139, 0.5);
+  padding: 0.8rem 1rem;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  margin-left: 0.5rem;
+  padding-right: 1.7rem;
+}
+
+.date-container::after {
+  position: absolute;
+  content: "";
+  width: 0.5em;
+  height: 0.4em;
+  background-color: white;
+  clip-path: polygon(100% 0%, 0 0%, 50% 100%);
+  right: 30px;
+}
+.currents-speed {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.ocean-mode {
+  display: flex;
+  align-items: center;
+}
+
+.animate-header {
+  display: inline;
+}
+
+#multiplier {
+  float: right;
+  margin-left: auto;
+}
+
+#multiplier label,
+.date-container label {
+  font-size: 1.2rem;
+}
+
+#multiplier input {
+  border: 1px solid rgba(72, 61, 139, 0.5);
+  border: 1px;
+  padding: 0.65rem 1rem;
+  color: rgb(72, 61, 139);
+  border-radius: 8px;
+}
+#multiplier button {
+  background: rgba(72, 61, 139, 0.5);
+  border: none;
+  padding: 0.8rem 1rem;
+  color: white;
+  border-radius: 8px;
+}
+
 /**************************************************************************************************
  * Page Styling
  **************************************************************************************************/
@@ -174,7 +248,7 @@ body {
   pointer-events: all;
 
   margin-top: 1rem;
-  padding: 0.5rem 1rem 0.5rem 1rem;
+  padding: 1.5rem 1.5rem;
   opacity: 1;
   max-height: 34rem;
   transition: opacity 250ms ease, max-height 250ms ease, margin-top 250ms ease;
@@ -368,9 +442,9 @@ body {
 }
 
 .adjust_scale {
-  background-color: darkslateblue;
+  background-color: rgba(72, 61, 139, 0.5);
   color: #eeeeee;
-  border-radius: 10px;
+  border-radius: 8px;
   border: none;
   padding: 10px 15px;
   font-size: 1rem;
@@ -402,7 +476,6 @@ body {
 
 .set_scale_button {
   border: none;
-
   background-color: rgb(88, 76, 163);
   margin-top: 1rem;
 }

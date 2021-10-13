@@ -33,9 +33,7 @@ let increase = document.querySelector("#animate-speed");
 let increaseButton = document.querySelector(".increase_speed");
 
 const multiplicator = window.localStorage.getItem("multiplicator");
-increaseButton.innerHTML = `Current Speed ${
-  multiplicator !== null || undefined ? `x${multiplicator}` : ""
-}`;
+increaseButton.innerHTML = `Increase Speed`;
 
 ["change", "keyup"].forEach((evt) =>
   increase.addEventListener(evt, updateValue, false)
@@ -43,10 +41,29 @@ increaseButton.innerHTML = `Current Speed ${
 
 function updateValue(e) {
   window.localStorage.setItem("multiplicator", e.target.value);
-  let multiplicator = window.localStorage.getItem("multiplicator");
-  increaseButton.innerHTML = `Current Speed ${
-    multiplicator !== null || undefined
-      ? `x${multiplicator}`
-      : `x${e.target.value}`
-  }`;
+  increaseButton.innerHTML = `Increase Speed ${`x${e.target.value}`}`;
 }
+
+//select date for data
+const selectElement = document.querySelector("#date-select");
+const yearValue = window.localStorage.getItem("currentYear");
+const selectedOption = document.querySelector("#selected_year");
+
+selectedOption.innerHTML = `${yearValue ? yearValue : "1950"}`;
+
+selectElement.addEventListener("change", (event) => {
+  window.localStorage.setItem("currentYear", event.target.value);
+  location.reload();
+});
+
+//only show current multiplier when ocean highlighted
+const oceanMode = document.querySelector("#ocean-mode-enable");
+const speedMultiplierForm = document.querySelector("#multiplier");
+const oceanModeButtonss = document.querySelector(".speed-value");
+
+oceanModeButtonss.textContent = `x${multiplicator}`;
+oceanMode.addEventListener("click", function () {
+  if (oceanMode.classList.contains("highlighted")) {
+    speedMultiplierForm.style.display = "none";
+  }
+});
