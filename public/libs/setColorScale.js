@@ -39,6 +39,7 @@ increaseButton.innerHTML = `Increase Speed`;
   increase.addEventListener(evt, updateValue, false)
 );
 
+//update value
 function updateValue(e) {
   window.localStorage.setItem("multiplicator", e.target.value);
   increaseButton.innerHTML = `Increase Speed ${`x${e.target.value}`}`;
