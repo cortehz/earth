@@ -261,7 +261,9 @@ var products = (function () {
       ".json";
     const selectedYear = yearValue ? yearValue : defaultYear;
 
-    const filePath = [WEATHER_PATH, dir, selectedYear, file].join("/");
+    const filePath = [WEATHER_PATH, `${dir}/years`, selectedYear, file].join(
+      "/"
+    );
 
     //fetch request from filePath
     fetch(filePath)

@@ -50,6 +50,19 @@ const selectElement = document.querySelector("#date-select");
 const yearValue = window.localStorage.getItem("currentYear");
 const selectedOption = document.querySelector("#selected_year");
 
+//fetch data years from folder with node API
+fetch("/getyears")
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data);
+    data.dataYears.map((year) => {
+      let option = document.createElement("option");
+      option.value = year;
+      option.innerHTML = year;
+      selectElement.appendChild(option);
+    });
+  });
+
 selectedOption.innerHTML = `${yearValue ? yearValue : "1950"}`;
 
 selectElement.addEventListener("change", (event) => {
